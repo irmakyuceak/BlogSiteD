@@ -1,0 +1,75 @@
+﻿@model BlogSite.Models.Article
+
+@{
+    ViewData["Title"] = "Blog Detayı";
+}
+
+<div class="container mt-5">
+    <h2 class="mb-3">@Model.Title</h2>
+
+    @if (!string.IsNullOrEmpty(Model.ImagePath))
+    {
+        <div class="mb-4 text-center">
+            <img src="@Model.ImagePath" class="img-fluid rounded shadow-sm" alt="Blog Görseli" style="max-height: 400px;" />
+        </div>
+    }
+
+    <p class="text-muted">
+        Yazar: <strong>@Model.User?.Username</strong> |
+        Kategori: <strong>@Model.Category?.Name</strong> |
+        Yayın Tarihi: <strong>@Model.PublishDate.ToShortDateString()</strong>
+    </p>
+
+    <hr />
+    <div>
+        <p>@Model.Content</p>
+    </div>
+
+    <a asp-controller="Article" asp-action="Index" class="btn btn-secondary mt-4">← Tüm Bloglar</a>
+
+    <hr />
+    <h4 class="mt-5">Yorumlar</h4>
+
+    @if (Model.Comments != null && Model.Comments.Any())
+    {
+        <ul class="list-group mt-3">
+            @foreach (var comment in Model.Comments.OrderByDescending(c => c.CreatedAt))
+            {
+                <li class="list-group-item">
+                    <strong>@comment.AuthorName</strong> <span class="text-muted">(@comment.CreatedAt.ToString("g"))</span>
+                    <p class="mb-0">@comment.Content</p>
+                </li>
+            }
+        </ul>
+    }
+    else
+    {
+        <p class="text-muted mt-2">Henüz yorum yapılmamış. İlk sen ol!</p>
+    }
+
+    @if (User.Identity.IsAuthenticated)
+    {
+        <hr />
+        <h4 class="mt-5">Yorum Yap</h4>
+
+        <form asp-controller="Comment" asp-action="Create" method="post">
+            @Html.AntiForgeryToken()
+
+            <input type="hidden" name="ArticleId" value="@Model.Id" />
+            <input type="hidden" name="AuthorName" value="@User.Identity.Name" />
+
+            <div class="mb-3">
+                <label for="Content" class="form-label">Yorumunuz</label>
+                <textarea name="Content" class="form-control" rows="3" required></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Gönder</button>
+        </form>
+    }
+    else
+    {
+        <p class="text-muted mt-4">
+            Yorum yapabilmek için <a asp-controller="User" asp-action="Login">giriş yapmalısınız</a>.
+        </p>
+    }
+</div>

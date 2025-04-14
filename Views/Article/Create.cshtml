@@ -1,0 +1,54 @@
+﻿@model BlogSite.Models.View.ArticleCreateViewModel
+
+@{
+    ViewData["Title"] = "Yeni Blog Yazısı";
+}
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Yeni Blog Yazısı Ekle</h2>
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+    }
+
+    <form asp-controller="Article" asp-action="Create" method="post" enctype="multipart/form-data">
+        @Html.AntiForgeryToken()
+
+        <div class="mb-3">
+            <label asp-for="Article.Title" class="form-label">Başlık</label>
+            <input asp-for="Article.Title" class="form-control" />
+            <span asp-validation-for="Article.Title" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Article.Content" class="form-label">İçerik</label>
+            <textarea asp-for="Article.Content" class="form-control" rows="5"></textarea>
+            <span asp-validation-for="Article.Content" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Article.CategoryId" class="form-label">Kategori</label>
+            <select asp-for="Article.CategoryId" class="form-select">
+                <option value="">Kategori seçiniz</option>
+                @foreach (var item in Model.Categories)
+                {
+                    <option value="@item.Id">@item.Name</option>
+                }
+            </select>
+            <span asp-validation-for="Article.CategoryId" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="ImageFile" class="form-label">Görsel Yükle</label>
+            <input asp-for="ImageFile" type="file" class="form-control" accept="image/*" />
+            <span asp-validation-for="ImageFile" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Kaydet</button>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,31 @@
+﻿@model List<BlogSite.Models.Article>
+
+@{
+    ViewData["Title"] = "Blog Yazıları";
+}
+
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-center mb-0 flex-grow-1">Tüm Blog Yazıları</h2>
+
+        <a asp-controller="Article" asp-action="Create" class="btn btn-success ms-3">
+            + Yeni Blog Yazısı Ekle
+        </a>
+    </div>
+
+    @if (Model == null || !Model.Any())
+    {
+        <div class="alert alert-info text-center">
+            Henüz blog yazısı eklenmemiş.
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            @foreach (var blog in Model)
+            {
+                @await Html.PartialAsync("_ArticleCard", blog)
+            }
+        </div>
+    }
+</div>

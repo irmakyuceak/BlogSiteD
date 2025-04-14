@@ -1,0 +1,63 @@
+﻿@model BlogSite.Models.View.ArticleCreateViewModel
+
+@{
+    ViewData["Title"] = "Blog Yazısını Düzenle";
+}
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Blog Yazısını Düzenle</h2>
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+    }
+
+    <form asp-controller="Article" asp-action="Update" method="post" enctype="multipart/form-data">
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="Article.Id" />
+
+        <div class="mb-3">
+            <label asp-for="Article.Title" class="form-label">Başlık</label>
+            <input asp-for="Article.Title" class="form-control" />
+            <span asp-validation-for="Article.Title" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Article.Content" class="form-label">İçerik</label>
+            <textarea asp-for="Article.Content" class="form-control" rows="5"></textarea>
+            <span asp-validation-for="Article.Content" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Article.CategoryId" class="form-label">Kategori</label>
+            <select asp-for="Article.CategoryId" class="form-select">
+                <option value="">Kategori seçiniz</option>
+                @foreach (var item in Model.Categories)
+                {
+                    <option value="@item.Id" selected="@(item.Id == Model.Article.CategoryId)">
+                        @item.Name
+                    </option>
+                }
+            </select>
+            <span asp-validation-for="Article.CategoryId" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="ImageFile" class="form-label">Yeni Görsel Yükle (Opsiyonel)</label>
+            <input asp-for="ImageFile" type="file" class="form-control" accept="image/*" />
+            <span asp-validation-for="ImageFile" class="text-danger"></span>
+        </div>
+        <input type="hidden" name="ExistingImagePath" value="@Model.Article.ImagePath" />
+        @if (!string.IsNullOrEmpty(Model.Article.ImagePath))
+        {
+            <div class="mb-3">
+                <p>Mevcut Görsel:</p>
+                <img src="@Model.Article.ImagePath" class="img-thumbnail" style="max-height: 150px;" />
+            </div>
+        }
+
+
+        <button type="submit" class="btn btn-success">Güncelle</button>
+        <a asp-controller="User" asp-action="Profile" class="btn btn-secondary ms-2">İptal</a>
+    </form>
+</div>

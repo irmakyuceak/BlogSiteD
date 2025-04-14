@@ -1,0 +1,46 @@
+﻿@model BlogSite.Models.Article
+
+@{
+    var currentUserId = User.Identity.IsAuthenticated
+        ? int.Parse(User.FindFirst("Id")!.Value)
+        : 0;
+
+    var isOwner = Model.UserId == currentUserId;
+}
+
+<div class="col-md-6 mb-4">
+    <div class="card h-100 shadow-sm">
+
+        @if (!string.IsNullOrEmpty(Model.ImagePath))
+        {
+            <img src="@Model.ImagePath" class="card-img-top" alt="Blog görseli">
+        }
+
+        <div class="card-body">
+            <h5 class="card-title">@Model.Title</h5>
+            <p class="card-text text-truncate">@Model.Content</p>
+        </div>
+
+        <div class="card-footer small text-muted d-flex justify-content-between">
+            <span>Kategori: @Model.Category?.Name</span>
+            <span>@Model.PublishDate.ToShortDateString()</span>
+        </div>
+
+        <div class="card-footer d-flex gap-2">
+            <a asp-controller="Article" asp-action="Details" asp-route-id="@Model.Id"
+               class="btn btn-outline-primary btn-sm w-100">Detay</a>
+
+            @if (isOwner)
+            {
+                <a asp-controller="Article" asp-action="Edit" asp-route-id="@Model.Id"
+                   class="btn btn-outline-warning btn-sm w-100">Güncelle</a>
+
+                <a asp-controller="Article" asp-action="Delete" asp-route-id="@Model.Id"
+                   class="btn btn-outline-danger btn-sm w-100"
+                   onclick="return confirm('Bu yazıyı silmek istediğinizden emin misiniz?');">
+                    Sil
+                </a>
+            }
+        </div>
+    </div>
+</div>

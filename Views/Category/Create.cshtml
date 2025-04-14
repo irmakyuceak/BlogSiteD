@@ -1,0 +1,32 @@
+﻿@model BlogSite.Models.Category
+
+@{
+    ViewData["Title"] = "Yeni Kategori";
+}
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Yeni Kategori Ekle</h2>
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["ErrorMessage"]
+        </div>
+    }
+
+    <form asp-controller="Category" asp-action="Create" method="post">
+        @Html.AntiForgeryToken()
+
+        <div class="mb-3">
+            <label asp-for="Name" class="form-label">Kategori Adı</label>
+            <input asp-for="Name" class="form-control" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-success">Kaydet</button>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

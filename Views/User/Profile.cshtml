@@ -1,0 +1,57 @@
+﻿@model BlogSite.Models.View.UserProfileViewModel
+
+@{
+    ViewData["Title"] = "Profilim";
+}
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Profilim</h2>
+
+    <div class="row">
+        <!-- Profil Bilgileri -->
+        <div class="col-md-4">
+            <div class="card shadow-sm p-3">
+                <h5 class="card-title text-center mb-3">Profil Bilgileri</h5>
+                <form asp-controller="User" asp-action="UpdateProfile" method="post">
+                    @Html.AntiForgeryToken()
+
+                    <div class="mb-3">
+                        <label class="form-label">Kullanıcı Adı</label>
+                        <input class="form-control" name="Username" value="@Model.User.Username" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Email</label>
+                        <input class="form-control" name="Email" value="@Model.User.Email" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Şifre (isteğe bağlı)</label>
+                        <input class="form-control" name="Password" type="password" placeholder="Yeni şifre" />
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100">Güncelle</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Blog Yazıları -->
+        <div class="col-md-8">
+            <h5 class="mb-3">Yazdığınız Blog Yazıları</h5>
+
+            @if (Model.Articles == null || !Model.Articles.Any())
+            {
+                <div class="alert alert-info">Henüz blog yazısı yazmamışsınız.</div>
+            }
+            else
+            {
+                <div class="row">
+                    @foreach (var blog in Model.Articles)
+                    {
+                        @await Html.PartialAsync("_ArticleCard", blog)
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</div>

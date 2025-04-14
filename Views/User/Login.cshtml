@@ -1,0 +1,95 @@
+﻿@model BlogSite.Models.Dto.LoginDto
+@{
+    ViewData["Title"] = "Giriş Yap";
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Giriş Yap - Blog Sitesi</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body style="background: #f8f9fd; color: gray;">
+
+    <section class="login-section">
+        <div class="container mt-5">
+            <div class="row justify-content-center">
+                <div class="col-lg-5">
+
+                    @if (TempData["ErrorMessage"] != null)
+                    {
+                        <div class="alert alert-danger" role="alert">
+                            @TempData["ErrorMessage"]
+                        </div>
+                    }
+                    @if (TempData["SuccessMessage"] != null)
+                    {
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            @TempData["SuccessMessage"]
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Kapat"></button>
+                        </div>
+                    }
+
+                    <div class="wrap">
+                        <h1 class="text-center" >Blog Site</h1>
+                        <div class="login-wrap p-4">
+                            <div class="d-flex flex-column">
+                                <div class="login-header mb-3">
+                                    <h3 class="text-center">Giriş Yap</h3>
+                                </div>
+                                <div class="login-form">
+                                    <form asp-controller="User" asp-action="Login" method="POST">
+                                        @Html.AntiForgeryToken()
+
+                                        <div class="mb-3">
+                                            <label asp-for="Username" class="form-label">Kullanıcı Adı</label>
+                                            <input asp-for="Username" type="text" class="form-control" placeholder="Kullanıcı Adı" />
+                                            <span asp-validation-for="Username" class="text-danger"></span>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label asp-for="Password" class="form-label">Şifre</label>
+                                            <input asp-for="Password" type="password" class="form-control" placeholder="Şifre" />
+                                            <span asp-validation-for="Password" class="text-danger"></span>
+                                        </div>
+
+                                        <button type="submit" class="btn btn-primary w-100">Giriş Yap</button>
+                                    </form>
+                                </div>
+
+                                <div class="text-end mt-2">
+                                    <a asp-controller="User" asp-action="SifremiUnuttum" class="text-decoration-none">Şifrenizi mi unuttunuz?</a>
+                                </div>
+
+                                <hr />
+                                <div class="login-footer text-center">
+                                    <p>Kayıtlı değil misiniz? <a asp-controller="User" asp-action="Register" class="login-a">Kayıt Ol</a></p>
+                                </div>
+
+                                <div class="mt-3 text-center">
+                                    <p>Giriş yapmadan devam etmek istiyorsanız:</p>
+                                    <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary w-100">
+                                        Giriş Yapmadan Devam Et
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    @* ✅ Validation scriptleri (client-side validation için gerekli) *@
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+</body>
+</html>
